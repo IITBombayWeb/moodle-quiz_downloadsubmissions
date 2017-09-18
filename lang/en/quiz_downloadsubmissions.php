@@ -27,8 +27,8 @@ $string['downloadsubmissions'] = 'Download essay submissions';
 $string['downloadsubmissionsreport'] = 'Download submissions report';
 $string['noattempts'] = 'No attempts found.';
 $string['noessayquestion'] = 'Quiz does not contain any essay questions.';
+$string['noquestions'] = 'No questions have been added yet.';
 $string['nosubmission'] = 'No submissions found.';
 $string['pluginname'] = 'Download essay submissions';
 $string['plugindescription'] = 'Download files submitted by all students (all attempts) as attachments in response to quiz essay questions.<br><br>';
 $string['reportdownloadsubmissions'] = 'Download submissions report';
-

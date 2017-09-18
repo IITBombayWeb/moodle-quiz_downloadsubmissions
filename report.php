@@ -112,11 +112,12 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
         }
 
         $hasquestions = quiz_has_questions($quiz->id);
+//         print_object($this);
 
         if (!$downloading_submissions) {
         	if ($ds_button_clicked) {
 	        	if (!$hasquestions) {
-	                echo quiz_no_questions_message($quiz, $cm, $this->context);
+	        	    echo $OUTPUT->notification(get_string('noquestions', 'quiz_downloadsubmissions'));
 	            } else if (!$hasstudents) {
 	                echo $OUTPUT->notification(get_string('nostudentsyet'));
 	            } else if ($currentgroup && !$this->hasgroupstudents) {
