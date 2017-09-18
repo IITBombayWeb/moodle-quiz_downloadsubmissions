@@ -30,9 +30,9 @@ The ‘Download essay submission’ plugin offers users a convenient way by whic
  First Attempt - Answer.odt
  Second attempt - New_answer.pdf
  
- Now, in the downloaded zip file, the folder hierarchy for this particular student's response files is as follows:
- Q8 - OOP Concept / anisha - Anisha Patki / Attempt1_Answer.odt
- Q8 - OOP Concept / anisha - Anisha Patki / Attempt2_New_answer.pdf
+ Now, in the downloaded zip file, the folder hierarchy for this particular student's response files is as follows: 
+Q8 - OOP Concept / anisha - Anisha Patki / Attempt1_Answer.odt
+Q8 - OOP Concept / anisha - Anisha Patki / Attempt2_New_answer.pdf
  
  (Here, in Q8, 8 is the database question id for that particular question and may not match the question no. as it appeared in the quiz as shown in the example above.)
  
