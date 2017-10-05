@@ -95,13 +95,6 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
             $this->print_header_and_tabs($cm, $course, $quiz, $this->mode);
         }
 
-        if ($groupmode = groups_get_activity_groupmode($cm)) {
-            // Groups are being used, so output the group selector if we are not downloading.
-        	if (!$downloading_submissions) {
-                groups_print_activity_menu($cm, $options->get_url());
-            }
-        }
-
         $currentgroup = null;
         // Print information on the number of existing attempts.
         if (!$downloading_submissions) {
@@ -112,7 +105,6 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
         }
 
         $hasquestions = quiz_has_questions($quiz->id);
-//         print_object($this);
 
         if (!$downloading_submissions) {
         	if ($ds_button_clicked) {
@@ -120,8 +112,8 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 	        	    echo $OUTPUT->notification(get_string('noquestions', 'quiz_downloadsubmissions'));
 	            } else if (!$hasstudents) {
 	                echo $OUTPUT->notification(get_string('nostudentsyet'));
-	            } else if ($currentgroup && !$this->hasgroupstudents) {
-	                echo $OUTPUT->notification(get_string('nostudentsingroup'));
+// 	            } else if ($currentgroup && !$this->hasgroupstudents) {
+// 	                echo $OUTPUT->notification(get_string('nostudentsingroup'));
 	            } else if (!$hasessayquestions) {
 	            	echo $OUTPUT->notification(get_string('noessayquestion', 'quiz_downloadsubmissions'));
 	            } elseif (!$user_attempts) {
