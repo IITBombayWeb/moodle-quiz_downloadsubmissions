@@ -75,6 +75,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
         $downloading_submissions = false;
         $ds_button_clicked = false;
         $user_attempts = false;
+        $nosubmissions = false;
 
         // Check if downloading file submissions.
         if ($data = $mform->get_data()){
@@ -84,15 +85,21 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 
 	           	// Download file submissions for essay questions.
 	        	if ($downloading_submissions) {
-	        		$this->download_essay_submissions($quiz, $cm, $course, $user_attempts);
+	        	    // If no attachments are found then it returns true;
+	        	    // else returns zip folder with attachments submitted by the students.
+	        	    $nosubmissions = $this->download_essay_submissions($quiz, $cm, $course, $user_attempts);
 	        	}
 	        }
         }
 
         // Start output.
-        if (!$downloading_submissions) {
+        if (!$downloading_submissions | $nosubmissions) {
             // Only print headers if not asked to download data.
-            $this->print_header_and_tabs($cm, $course, $quiz, $this->mode);
+            $this->print_header_and_tabs($cm, $course, $quiz, 'downloadsubmissions');
+        }
+
+        if($nosubmissions) {
+            echo $OUTPUT->notification(get_string('nosubmission', 'quiz_downloadsubmissions'));
         }
 
         $currentgroup = null;
@@ -106,7 +113,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 
         $hasquestions = quiz_has_questions($quiz->id);
 
-        if (!$downloading_submissions) {
+        if (!$downloading_submissions | $nosubmissions) {
         	if ($ds_button_clicked) {
 	        	if (!$hasquestions) {
 	        	    echo $OUTPUT->notification(get_string('noquestions', 'quiz_downloadsubmissions'));
@@ -194,7 +201,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 		        FROM		{user} 				u
 		        LEFT JOIN 	{quiz_attempts} 	quiza	ON	quiza.userid 		= u.id
 		        										AND quiza.quiz 			= $quiz->id
-		        JOIN 		{question_attempts} qa 		ON	qa.questionusageid	= quiza.id		/*7*/
+		        JOIN 		{question_attempts} qa 		ON	qa.questionusageid	= quiza.uniqueid		/*7*/
 		       /* JOIN 		{user_enrolments} 	ej1_ue 	ON	ej1_ue.userid 		= u.id
 		        JOIN 		{enrol} 			ej1_e 	ON	(ej1_e.id 			= ej1_ue.enrolid
 														AND ej1_e.courseid 		= $course->id) */
@@ -219,7 +226,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
      * @return string - If an error occurs, this will contain the error notification.
      */
     protected function download_essay_submissions($quiz, $cm, $course, $student_attempts) {
-    	global $CFG;
+    	global $CFG, $OUTPUT;
 
     	// More efficient to load this here.
     	require_once($CFG->libdir.'/filelib.php');
@@ -297,16 +304,16 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     		}
     	}
 
-    	$result = '';
+    	$nofilesfound = false;
     	if (count($filesforzipping) == 0) {
-    		$result .= $OUTPUT->notification(get_string('nosubmission', 'quiz_downloadsubmissions'));
+    	    $nofilesfound= true;
     	} else if ($zipfile = $this->pack_files($filesforzipping)) {
     		// Send file and delete after sending.
     		send_temp_file($zipfile, $filename);
     		// We will not get here - send_temp_file calls exit.
     	}
 
-    	return $result;
+    	return $nofilesfound;
     }
 
     /**
