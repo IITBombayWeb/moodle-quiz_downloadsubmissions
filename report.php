@@ -98,13 +98,9 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
             $this->print_header_and_tabs($cm, $course, $quiz, 'downloadsubmissions');
         }
 
-        if($nosubmissions) {
-            echo $OUTPUT->notification(get_string('nosubmission', 'quiz_downloadsubmissions'));
-        }
-
         $currentgroup = null;
         // Print information on the number of existing attempts.
-        if (!$downloading_submissions) {
+        if (!$downloading_submissions | $nosubmissions) {
             // Do not print notices when downloading.
             if ($strattemptnum = quiz_num_attempt_summary($quiz, $cm, true, $currentgroup)) {
                 echo '<div class="quizattemptcounts">' . $strattemptnum . '</div>';
@@ -123,8 +119,10 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 // 	                echo $OUTPUT->notification(get_string('nostudentsingroup'));
 	            } else if (!$hasessayquestions) {
 	            	echo $OUTPUT->notification(get_string('noessayquestion', 'quiz_downloadsubmissions'));
-	            } elseif (!$user_attempts) {
+	            } else if (!$user_attempts) {
 	            	echo $OUTPUT->notification(get_string('noattempts', 'quiz_downloadsubmissions'));
+	            } else if ($nosubmissions) {
+	                echo $OUTPUT->notification(get_string('nosubmission', 'quiz_downloadsubmissions'));
 	            }
         	}
 
@@ -243,6 +241,18 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     			$quiz->name . ' - ' .
     			$cm->id . '.zip');
 
+    	//==============================================================================
+
+    	$context = context_course::instance($course->id);
+    	$fs = get_file_storage();
+
+    	$tempdir = $CFG->tempdir . '/quiz_downloadsubmissions'; // Create temporary storage location for files.
+    	if (!file_exists($tempdir)) {
+    	    $mkdir = mkdir($tempdir, 0777, true);
+    	}
+    	$tempdirpath = $tempdir . '/';
+    	//==============================================================================
+
     	// Get the file submissions of each student.
     	foreach ($student_attempts as $student) {
 
@@ -258,9 +268,9 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     		} else {
     			$prefix2 .= $student->username;
     		}
-    		$prefix2 .= ' - ' . str_replace('_', ' ', fullname($student));
+    		$prefix2 .= ' - ' . str_replace('_', ' ', fullname($student)) . ' - ' . 'Attempt' . $student->userattemptnum . ' - '. date("d F Y g_i a", $student->timestart);
 
-    		$prefix3 = 'Attempt' . $student->userattemptnum.'_';
+    		$prefix3 = 'Attempt' . $student->userattemptnum . '_';
 
     		// Get question attempt and question context id
     		$dm = new question_engine_data_mapper();
@@ -268,7 +278,48 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     		$qa = $quba->get_question_attempt($student->slot);
     		$quba_contextid = $quba->get_owning_context()->id;
 
+
     		if ($qa->get_question()->get_type_name() == 'essay') {
+
+//     		    echo '<br><br><br>metadata=================<br>';
+//     		    print_object(date("d F Y g:i a", $student->timestart));
+
+
+    		    //===========================================================================
+//     		    echo '<br>response summary==============<br>';
+//     		    print_object($qa->get_response_summary());
+//     		    print_object($qa->get_full_qa());
+    		    $textfile1 = null;
+    		    if (!empty($qa->get_response_summary())) {
+//     		        echo '<br><br><br>heyya<br>';
+
+        		    $tempfilename = uniqid('textresponse_');
+//         		    $tempfilename = ('textresponse');
+
+//         		    $textfilename = $tempdirpath . $tempfilename;
+//         		    $textfile = $textfilename . '.text';
+        		    $textfileinfo = array (
+        		            'contextid' => $context->id,
+        		            'component' => 'quiz_downloadsubmissions',
+        		            'filearea'  => 'content',
+        		            'itemid'    => 0,
+        		            'filepath'  => '/',
+        		            'filename'  => $tempfilename . '.text');
+
+        		    $fs->create_file_from_string($textfileinfo, $qa->get_response_summary());
+
+        		    $textfile1 = $fs->get_file(
+        		            $textfileinfo['contextid'],
+        		            $textfileinfo['component'],
+        		            $textfileinfo['filearea'],
+        		            $textfileinfo['itemid'],
+        		            $textfileinfo['filepath'],
+        		            $textfileinfo['filename']);
+
+//         		    $textfile1->copy_content_to($textfile);
+    		    }
+
+    		    //===========================================================================
     			$name = 'attachments';
     			$questionname = $qa->get_question()->name;
     			$prefix1 .= ' - ' . $questionname;
@@ -297,10 +348,23 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 	    		foreach ($files as $zipfilepath => $file) {
 	    			$zipfilename = $file->get_filename();
 	    			$prefixedfilename = clean_filename($prefix1 . '/' . $prefix2);
-	    			$pathfilename = $prefix1 . '/' . $prefix2 . $file->get_filepath() . $prefix3 . $zipfilename;
+	    			$pathfilename = $prefix1 . '/' . $prefix2 . $file->get_filepath() . $prefix3 . 'file_attachment_' . $zipfilename;
 	    			$pathfilename = clean_param($pathfilename, PARAM_PATH);
 	    			$filesforzipping[$pathfilename] = $file;
+
+// 	    			echo '<br><br><br>files for zipping===================================<br>';
+// 	    			print_object($filesforzipping[$pathfilename]);
 	    		}
+	    		if($textfile1) {
+    	    		$zipfilename = $textfile1->get_filename();
+    	    		$prefixedfilename = clean_filename($prefix1 . '/' . $prefix2);
+//     	    		$pathfilename = $prefix1 . '/' . $prefix2 . $textfile1->get_filepath() . $prefix3 . $zipfilename;
+    	    		$pathfilename = $prefix1 . '/' . $prefix2 . $textfile1->get_filepath() . $prefix3 . 'textresponse';
+
+    	    		$pathfilename = clean_param($pathfilename, PARAM_PATH);
+    	    		$filesforzipping[$pathfilename] = $textfile1;
+	    		}
+// 	    		$filesforzipping[$textfile1->get_filename()] = $textfile1;
     		}
     	}
 
