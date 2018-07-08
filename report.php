@@ -246,11 +246,11 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     	$context = context_course::instance($course->id);
     	$fs = get_file_storage();
 
-    	$tempdir = $CFG->tempdir . '/quiz_downloadsubmissions'; // Create temporary storage location for files.
-    	if (!file_exists($tempdir)) {
-    	    $mkdir = mkdir($tempdir, 0777, true);
-    	}
-    	$tempdirpath = $tempdir . '/';
+//     	$tempdir = $CFG->tempdir . '/quiz_downloadsubmissions'; // Create temporary storage location for files.
+//     	if (!file_exists($tempdir)) {
+//     	    $mkdir = mkdir($tempdir, 0777, true);
+//     	}
+//     	$tempdirpath = $tempdir . '/';
     	//==============================================================================
 
     	// Get the file submissions of each student.
@@ -286,14 +286,18 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 
 
     		    //===========================================================================
+    		    // Writing text response to a file.
+
 //     		    echo '<br>response summary==============<br>';
 //     		    print_object($qa->get_response_summary());
 //     		    print_object($qa->get_full_qa());
     		    $textfile1 = null;
     		    if (!empty($qa->get_response_summary())) {
-//     		        echo '<br><br><br>heyya<br>';
+//     		        echo '<br><br><br>heyya============<br>';
 
-        		    $tempfilename = uniqid('textresponse_');
+//         		    $tempfilename = uniqid('textresponse_');
+    		        $tempfilename = $prefix1 . ' - ' . $prefix2 . ' - ' . 'textresponse';
+//         		    echo $tempfilename;
 //         		    $tempfilename = ('textresponse');
 
 //         		    $textfilename = $tempdirpath . $tempfilename;
@@ -306,20 +310,32 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
         		            'filepath'  => '/',
         		            'filename'  => $tempfilename . '.text');
 
-        		    $fs->create_file_from_string($textfileinfo, $qa->get_response_summary());
+//         		    $fs->create_file_from_string($textfileinfo, $qa->get_response_summary());
 
-        		    $textfile1 = $fs->get_file(
+        		    if ($fs->file_exists(
         		            $textfileinfo['contextid'],
         		            $textfileinfo['component'],
         		            $textfileinfo['filearea'],
         		            $textfileinfo['itemid'],
         		            $textfileinfo['filepath'],
-        		            $textfileinfo['filename']);
+        		            $textfileinfo['filename'])) {
+        		        $textfile1 = $fs->get_file(
+    	                        $textfileinfo['contextid'],
+    	                        $textfileinfo['component'],
+    	                        $textfileinfo['filearea'],
+    	                        $textfileinfo['itemid'],
+    	                        $textfileinfo['filepath'],
+    	                        $textfileinfo['filename']);
+        		    } else {
+        		        $fs->create_file_from_string($textfileinfo, $qa->get_response_summary());
+        		    }
 
 //         		    $textfile1->copy_content_to($textfile);
     		    }
 
     		    //===========================================================================
+    		    // Fetching attachments.
+
     			$name = 'attachments';
     			$questionname = $qa->get_question()->name;
     			$prefix1 .= ' - ' . $questionname;
