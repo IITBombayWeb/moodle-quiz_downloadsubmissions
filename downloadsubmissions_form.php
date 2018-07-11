@@ -51,6 +51,31 @@ class quiz_downloadsubmissions_settings_form extends moodleform {
 		$mform->addElement('hidden', 'mode', '');
 		$mform->setType('mode', PARAM_ALPHA);
 
-		$mform->addElement('submit', 'downloadsubmissions', get_string('downloadsubmissions', 'quiz_downloadsubmissions'));
+// 		$mform->addElement('header', 'preferencespage',
+// 		        get_string('reportwhattoinclude', 'quiz'));
+
+		$mform->addElement('header', 'preferencespage',
+		        'Set preferences');
+
+		$mform->addElement('select', 'folders', 'Set folder hierarchy', array(
+		        'questionwise'    => 'Essay question wise',
+		        'attemptwise'     => 'User attempt wise',
+		));
+
+// 		$mform->addElement('selectyesno', 'textresponse',
+// 		        'Include text response');
+
+		$mform->addElement('select', 'textresponse', 'Include text response', array(
+		        '1'   => 'Yes',
+		        '0'   => 'No',
+		));
+
+		$mform->addElement('select', 'questiontext', 'Include question text', array(
+		        '1'   => 'Yes',
+		        '0'   => 'No',
+		));
+
+// 		$mform->addElement('submit', 'downloadsubmissions', get_string('downloadsubmissions', 'quiz_downloadsubmissions'));
+		$mform->addElement('submit', 'downloadsubmissions', 'Download');
 	}
 }
