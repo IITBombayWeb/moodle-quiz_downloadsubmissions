@@ -65,12 +65,12 @@ class quiz_downloadsubmissions_settings_form extends moodleform {
 // 		$mform->addElement('selectyesno', 'textresponse',
 // 		        'Include text response');
 
-		$mform->addElement('select', 'textresponse', 'Include text response', array(
+		$mform->addElement('select', 'textresponse', 'Include text response file', array(
 		        '1'   => 'Yes',
 		        '0'   => 'No',
 		));
 
-		$mform->addElement('select', 'questiontext', 'Include question text', array(
+		$mform->addElement('select', 'questiontext', 'Include question text file', array(
 		        '1'   => 'Yes',
 		        '0'   => 'No',
 		));

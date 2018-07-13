@@ -247,7 +247,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 
     		// Construct download folder name.
     		$userid = $student->userid;
-    		$questionid = 'Q' . $student->questionid;
+    		$questionid = 'Q' . $student->slot;   // Or use slot number from {quiz_slots} table.
 
     		$prefix1 = str_replace('_', ' ', $questionid);
 
@@ -257,7 +257,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     		} else {
     			$prefix2 .= $student->username;
     		}
-    		$prefix2 .= ' - ' . str_replace('_', ' ', fullname($student)) . ' - ' . 'Attempt' . $student->userattemptnum . ' - '. date("d F Y g_i a", $student->timestart);
+    		$prefix2 .= ' - ' . str_replace('_', ' ', fullname($student)) . ' - ' . 'Attempt' . $student->userattemptnum . ' - '. date("Y-m-d g_i a", $student->timestart);
 
     		$prefix3 = 'Attempt' . $student->userattemptnum . '_';
 
@@ -277,6 +277,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
     		    $questiontextfile = null;
     		    if ($data->questiontext == 1) {
         		    if(!empty($qa->get_question_summary())) {
+//     		        if(!empty($qa->get_question()->questiontext)) {
         		        $qttextfilename = $questionid . ' - ' . $questionname . ' - ' . 'questiontext';
         		        $qttextfileinfo = array (
         		                'contextid' => $context->id,
@@ -294,6 +295,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
         		                $qttextfileinfo['filepath'],
         		                $qttextfileinfo['filename'])) {
 		                    $fs->create_file_from_string($qttextfileinfo, $qa->get_question_summary());
+// 		                    $fs->create_file_from_string($qttextfileinfo, $qa->get_question()->questiontext);
 		                }
 
 		                $questiontextfile = $fs->get_file(
@@ -308,8 +310,10 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 
     		    // Writing text response to a file.
     		    $textfile = null;
+    		    $hastextresponse = false;
     		    if ($data->textresponse == 1) {
         		    if (!empty($qa->get_response_summary())) {
+        		        $hastextresponse = true;
         		        $textfilename = $prefix1 . ' - ' . $prefix2 . ' - ' . 'textresponse';
         		        $textfileinfo = array (
         		                'contextid' => $context->id,
@@ -394,17 +398,19 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 	    		}
 
 	    		// III. File containing question text.
-	    		if ($questiontextfile) {
-	    		    $zipfilename = $questiontextfile->get_filename();
-// 	    		    $pathfilename = $pathprefix . $textfile->get_filepath() . $prefix3 . $zipfilename;
+	    		if (!empty($files) | $hastextresponse) {
+    	    		if ($questiontextfile) {
+    	    		    $zipfilename = $questiontextfile->get_filename();
+    // 	    		    $pathfilename = $pathprefix . $textfile->get_filepath() . $prefix3 . $zipfilename;
 
-	    		    if ($data->folders == 'questionwise') {
-	    		        $pathfilename = $prefix1 . $questiontextfile->get_filepath() . 'Question summary';
-	    		    } else if ($data->folders == 'attemptwise') {
-	    		        $pathfilename = $pathprefix . $questiontextfile->get_filepath() . 'Question summary';
-	    		    }
-	    		    $pathfilename = clean_param($pathfilename, PARAM_PATH);
-	    		    $filesforzipping[$pathfilename] = $questiontextfile;
+    	    		    if ($data->folders == 'questionwise') {
+    	    		        $pathfilename = $prefix1 . $questiontextfile->get_filepath() . 'Question text';
+    	    		    } else if ($data->folders == 'attemptwise') {
+    	    		        $pathfilename = $pathprefix . $questiontextfile->get_filepath() . 'Question text';
+    	    		    }
+    	    		    $pathfilename = clean_param($pathfilename, PARAM_PATH);
+    	    		    $filesforzipping[$pathfilename] = $questiontextfile;
+    	    		}
 	    		}
     		}
     	}
