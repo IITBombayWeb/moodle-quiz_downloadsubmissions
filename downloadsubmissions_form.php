@@ -55,27 +55,27 @@ class quiz_downloadsubmissions_settings_form extends moodleform {
 // 		        get_string('reportwhattoinclude', 'quiz'));
 
 		$mform->addElement('header', 'preferencespage',
-		        'Set preferences');
+		        get_string('setpreferences', 'quiz_downloadsubmissions'));
 
-		$mform->addElement('select', 'folders', 'Set folder hierarchy', array(
-		        'questionwise'    => 'Essay question wise',
-		        'attemptwise'     => 'User attempt wise',
+		$mform->addElement('select', 'folders', get_string('setfolderhierarchy', 'quiz_downloadsubmissions'), array(
+		        'questionwise'    => get_string('essayquestionwise', 'quiz_downloadsubmissions'),
+		        'attemptwise'     => get_string('userattemptwise', 'quiz_downloadsubmissions'),
 		));
 
 // 		$mform->addElement('selectyesno', 'textresponse',
 // 		        'Include text response');
 
-		$mform->addElement('select', 'textresponse', 'Include text response file', array(
-		        '1'   => 'Yes',
-		        '0'   => 'No',
+		$mform->addElement('select', 'textresponse', get_string('includetextresponsefile', 'quiz_downloadsubmissions'), array(
+		        '1'   => get_string('yes'),
+		        '0'   => get_string('no'),
 		));
 
-		$mform->addElement('select', 'questiontext', 'Include question text file', array(
-		        '1'   => 'Yes',
-		        '0'   => 'No',
+		$mform->addElement('select', 'questiontext', get_string('includequestiontextfile', 'quiz_downloadsubmissions'), array(
+		        '1'   => get_string('yes'),
+		        '0'   => get_string('no'),
 		));
 
 // 		$mform->addElement('submit', 'downloadsubmissions', get_string('downloadsubmissions', 'quiz_downloadsubmissions'));
-		$mform->addElement('submit', 'downloadsubmissions', 'Download');
+		$mform->addElement('submit', 'downloadsubmissions', get_string('download'));
 	}
 }
