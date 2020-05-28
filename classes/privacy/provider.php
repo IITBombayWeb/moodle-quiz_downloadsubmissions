@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'quiz_downloadsubmissions', language 'en'
+ * Quiz downloadsubmissions report - Privacy provider
  *
  * @package   quiz_downloadsubmissions
  * @copyright 2017 IIT Bombay
@@ -23,14 +23,27 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['downloadsubmissions'] = 'Download essay submissions';
-$string['downloadsubmissionsreport'] = 'Download submissions report';
-$string['noattempts'] = 'No attempts found.';
-$string['noessayquestion'] = 'Quiz does not contain any essay questions.';
-$string['noquestions'] = 'No questions have been added yet.';
-$string['nosubmission'] = 'No submissions found.';
-$string['pluginname'] = 'Download essay submissions';
-$string['plugindescription'] = 'Download files submitted by all students (all attempts) as attachments in response to quiz essay questions.<br><br>';
-$string['reportdownloadsubmissions'] = 'Download submissions report';
-// PRIVACY.
-$string['privacy:metadata'] = 'The quiz download submissions plugin does not store any personal data about any user.';
+namespace quiz_archive\privacy;
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Privacy Subsystem implementing null_provider.
+ *
+ * @package   quiz_downloadsubmissions
+ * @copyright 2017 IIT Bombay
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}
