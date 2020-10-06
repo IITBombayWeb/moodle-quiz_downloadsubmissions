@@ -16,6 +16,9 @@
 
 /**
  * This file defines the quiz downloadsubmissions report class.
+ * Support for randomly selected essay questions included 
+ * as suggested by gabriosecco 
+ * (https://github.com/IITBombayWeb/moodle-quiz_downloadsubmissions/issues/2#issuecomment-613266125)
  *
  * @package   quiz_downloadsubmissions
  * @copyright 2017 IIT Bombay
@@ -53,7 +56,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
         $hasessayquestions = false;
         if ($questions) {
 	        foreach ($questions as $question) {
-	        	if ($question->qtype == 'essay') {
+	        	if ($question->qtype == 'essay' || $question->qtype == 'random') {
 	        		$hasessayquestions = true;
 	        		break;
 	        	}
