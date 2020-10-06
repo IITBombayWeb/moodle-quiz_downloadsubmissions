@@ -31,4 +31,4 @@ $plugin->cron      = 18000;
 $plugin->component = 'quiz_downloadsubmissions';
 $plugin->maturity  = MATURITY_BETA;
 $plugin->release   = '1.1-r2';
-$plugin->supported = [33, 34, 35, 36, 37, 38, 39]; 
+
