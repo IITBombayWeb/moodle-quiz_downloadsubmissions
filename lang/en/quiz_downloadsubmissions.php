@@ -32,5 +32,11 @@ $string['nosubmission'] = 'No submissions found.';
 $string['pluginname'] = 'Download essay submissions';
 $string['plugindescription'] = 'Download files submitted by all students (all attempts) as attachments in response to quiz essay questions.<br><br>';
 $string['reportdownloadsubmissions'] = 'Download submissions report';
+$string['setpreferences'] = 'Set preferences';
+$string['setfolderhierarchy'] = 'Set folder hierarchy';
+$string['essayquestionwise'] = 'Essay question wise';
+$string['userattemptwise'] = 'User attempt wise';
+$string['includetextresponsefile'] = 'Include text response file';
+$string['includequestiontextfile'] = 'Include question text file';
 // PRIVACY.
 $string['privacy:metadata'] = 'The quiz download submissions plugin does not store any personal data about any user.';
