@@ -75,6 +75,12 @@ class quiz_downloadsubmissions_settings_form extends moodleform {
 		        '0'   => get_string('no'),
 		));
 
+        $mform->addElement('select', 'retainfilenames', 'Retain Filenames', array(
+		        '1'   => 'Yes',
+		        '0'   => 'No',
+		));
+        $mform->setDefault('retainfilenames', 0);
+
 // 		$mform->addElement('submit', 'downloadsubmissions', get_string('downloadsubmissions', 'quiz_downloadsubmissions'));
 		$mform->addElement('submit', 'downloadsubmissions', get_string('download'));
 	}

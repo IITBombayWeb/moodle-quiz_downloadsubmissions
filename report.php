@@ -385,8 +385,10 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 	    		foreach ($files as $zipfilepath => $file) {
 	    		    $fs_count++;
 	    			$zipfilename = $file->get_filename();
+                    // Retain original filenames or attach "attachment_"
+                    $retainfilenames = $data->retainfilenames == 1 ? '' : $prefix3 . 'attachment_';
 // 	    			$pathfilename = $pathprefix . $file->get_filepath() . $prefix3 . 'filesubmission' . $fs_count . '_' . $zipfilename;
-	    			$pathfilename = $pathprefix . $file->get_filepath() . $prefix3 . 'filesubmission' . '_' . $zipfilename;
+	    			$pathfilename = $pathprefix . $file->get_filepath() . $retainfilenames . $zipfilename;
 	    			$pathfilename = clean_param($pathfilename, PARAM_PATH);
 	    			$filesforzipping[$pathfilename] = $file;
 	    		}
