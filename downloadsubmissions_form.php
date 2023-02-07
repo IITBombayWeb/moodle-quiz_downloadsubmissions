@@ -25,7 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
 /**
  * Quiz downloadsubmissions report settings form.
  *
@@ -36,46 +35,41 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/formslib.php");
 
+/**
+ * The report settings form.
+ */
 class quiz_downloadsubmissions_settings_form extends moodleform {
 
     /**
      * Form definition method.
      */
-	public function definition() {
-		global $CFG;
+    public function definition() {
 
-		$mform = $this->_form;
-		$mform->addElement('hidden', 'id', '');
-		$mform->setType('id', PARAM_INT);
+        $mform = $this->_form;
+        $mform->addElement('hidden', 'id', '');
+        $mform->setType('id', PARAM_INT);
 
-		$mform->addElement('hidden', 'mode', '');
-		$mform->setType('mode', PARAM_ALPHA);
+        $mform->addElement('hidden', 'mode', '');
+        $mform->setType('mode', PARAM_ALPHA);
 
-// 		$mform->addElement('header', 'preferencespage',
-// 		        get_string('reportwhattoinclude', 'quiz'));
+        $mform->addElement('header', 'preferencespage',
+                get_string('setpreferences', 'quiz_downloadsubmissions'));
 
-		$mform->addElement('header', 'preferencespage',
-		        get_string('setpreferences', 'quiz_downloadsubmissions'));
+        $mform->addElement('select', 'folders', get_string('setfolderhierarchy', 'quiz_downloadsubmissions'), array(
+                'questionwise'    => get_string('essayquestionwise', 'quiz_downloadsubmissions'),
+                'attemptwise'     => get_string('userattemptwise', 'quiz_downloadsubmissions'),
+        ));
 
-		$mform->addElement('select', 'folders', get_string('setfolderhierarchy', 'quiz_downloadsubmissions'), array(
-		        'questionwise'    => get_string('essayquestionwise', 'quiz_downloadsubmissions'),
-		        'attemptwise'     => get_string('userattemptwise', 'quiz_downloadsubmissions'),
-		));
+        $mform->addElement('select', 'textresponse', get_string('includetextresponsefile', 'quiz_downloadsubmissions'), array(
+                '1'   => get_string('yes'),
+                '0'   => get_string('no'),
+        ));
 
-// 		$mform->addElement('selectyesno', 'textresponse',
-// 		        'Include text response');
+        $mform->addElement('select', 'questiontext', get_string('includequestiontextfile', 'quiz_downloadsubmissions'), array(
+                '1'   => get_string('yes'),
+                '0'   => get_string('no'),
+        ));
 
-		$mform->addElement('select', 'textresponse', get_string('includetextresponsefile', 'quiz_downloadsubmissions'), array(
-		        '1'   => get_string('yes'),
-		        '0'   => get_string('no'),
-		));
-
-		$mform->addElement('select', 'questiontext', get_string('includequestiontextfile', 'quiz_downloadsubmissions'), array(
-		        '1'   => get_string('yes'),
-		        '0'   => get_string('no'),
-		));
-
-// 		$mform->addElement('submit', 'downloadsubmissions', get_string('downloadsubmissions', 'quiz_downloadsubmissions'));
-		$mform->addElement('submit', 'downloadsubmissions', get_string('download'));
-	}
+        $mform->addElement('submit', 'downloadsubmissions', get_string('download'));
+    }
 }
