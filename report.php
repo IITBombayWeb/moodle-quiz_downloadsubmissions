@@ -16,8 +16,8 @@
 
 /**
  * This file defines the quiz downloadsubmissions report class.
- * Support for randomly selected essay questions included 
- * as suggested by gabriosecco 
+ * Support for randomly selected essay questions included
+ * as suggested by gabriosecco
  * (https://github.com/IITBombayWeb/moodle-quiz_downloadsubmissions/issues/2#issuecomment-613266125)
  *
  * @package   quiz_downloadsubmissions
@@ -395,7 +395,7 @@ class quiz_downloadsubmissions_report extends quiz_attempts_report {
 	    		if ($textfile) {
 	    		    $zipfilename = $textfile->get_filename();
 // 	    		    $pathfilename = $pathprefix . $textfile->get_filepath() . $prefix3 . $zipfilename;
-	    		    $pathfilename = $pathprefix . $textfile->get_filepath() . $prefix3 . 'textresponse';
+	    		    $pathfilename = $pathprefix . $textfile->get_filepath() . $prefix3 . 'textresponse.txt';
 	    		    $pathfilename = clean_param($pathfilename, PARAM_PATH);
 	    		    $filesforzipping[$pathfilename] = $textfile;
 	    		}
