@@ -29,7 +29,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/quiz/report/attemptsreport.php');
 require_once($CFG->dirroot . '/mod/quiz/report/downloadsubmissions/downloadsubmissions_form.php');
 
 /**
@@ -41,7 +40,7 @@ require_once($CFG->dirroot . '/mod/quiz/report/downloadsubmissions/downloadsubmi
  * @copyright 1999 onwards Martin Dougiamas and others {@link http://moodle.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class quiz_downloadsubmissions_report extends quiz_attempts_report {
+class quiz_downloadsubmissions_report extends mod_quiz\local\reports\attempts_report {
 
 	public function display($quiz, $cm, $course) {
         global $OUTPUT, $DB;
